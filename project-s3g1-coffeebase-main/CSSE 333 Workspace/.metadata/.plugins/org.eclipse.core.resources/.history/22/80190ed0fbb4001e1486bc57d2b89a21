@@ -1,0 +1,45 @@
+package sodabase.services;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+public class RestaurantService {
+
+	private DatabaseConnectionService dbService = null;
+	
+	public RestaurantService(DatabaseConnectionService dbService) {
+		this.dbService = dbService;
+	}
+	
+	public boolean addResturant(String restName, String addr, String contact) {
+		//TODO: Task 5
+		JOptionPane.showMessageDialog(null, "Add Restaurant not implemented.");
+		return false;
+	}
+	
+
+	public ArrayList<String> getRestaurants() {	
+		//TODO: Task 2 
+		ArrayList<String> rests = new ArrayList<String>();
+		try {
+			Connection connection = this.dbService.getConnection();
+			String query = "select name, addr, contact from Rest";
+			Statement statement = connection.createStatement();
+			ResultSet results = statement.executeQuery(query);
+			//read the results
+			while (results.next()) {
+				String RestName = results.getString("name");
+				rests.add(RestName);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rests;
+	}
+}

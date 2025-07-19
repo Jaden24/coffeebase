@@ -1,0 +1,218 @@
+package sodabase.services;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+import sodabase.ui.SodaByRestaurant;
+
+public class SodasByRestaurantService {
+
+	private DatabaseConnectionService dbService = null;
+
+	public SodasByRestaurantService(DatabaseConnectionService dbService) {
+		this.dbService = dbService;
+	}
+
+	public boolean addSodaByRestaurant(String rest, String soda, double price) {
+
+		Connection connection = null;
+		try {
+			connection = this.dbService.getConnection();
+			// call stored procedure
+
+			CallableStatement stmt = connection.prepareCall("{? = call AddSells(?, ?, ?)}");
+			stmt.registerOutParameter(1, Types.INTEGER);
+			stmt.setString(2, rest);
+			stmt.setString(3, soda);
+			stmt.setDouble(4, price);
+			boolean results = stmt.execute();
+
+			int returnCode = stmt.getInt(1);
+			if (returnCode == 1) {
+				JOptionPane.showMessageDialog(null, "Soda name cannot be null or empty.");
+			} else if (returnCode == 2) {
+				JOptionPane.showMessageDialog(null, "Rest name cannot be null or empty.");
+			} else if (returnCode == 3) {
+				JOptionPane.showMessageDialog(null, "Price cannot be null or empty.");
+			} else if (returnCode == 4) {
+				JOptionPane.showMessageDialog(null, "Given soda does not exist");
+			} else if (returnCode == 5) {
+				JOptionPane.showMessageDialog(null, "Given restaurant name does not exist");
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Successfully inserted " + rest + ", " + soda + ", " + price + " into Sells.");
+			}
+			return results;
+			// close connection
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			// close connection
+			try {
+				if (connection != null && !connection.isClosed())
+					connection.close();
+			} catch (SQLException e) {
+
+			}
+		}
+	}
+
+	public ArrayList<SodaByRestaurant> getSodasByRestaurants(String rest, String soda, String price,
+			boolean useGreaterThanEqual) {
+		
+		Connection connection = null;
+		
+		// TODO: Task 3 and Task 4
+//		String restCond;
+//		Boolean restNull;
+//		String sodaCond;
+//		Boolean sodaNull;
+//		Double priceCond;
+//		Boolean priceNull;
+//		boolean priceFilter = false;
+//		String preparedQuery;
+		try {
+			connection = this.dbService.getConnection();
+			CallableStatement stmt = connection.prepareCall("{call SearchSodasByRestSproc(?, ?, ?, ?)}");
+			stmt.setString(1, rest);
+			stmt.setString(2, soda);
+			stmt.setString(3, price);
+			stmt.setBoolean(4, useGreaterThanEqual);
+			ResultSet results = stmt.executeQuery();
+//			if (rest == null || rest.equals("")) {
+//				restCond = null;
+//				restNull = true;
+//			} else {
+//				restCond = rest;
+//				restNull = false;
+//
+//			}
+//			if (soda == null || soda.equals("")) {
+//				sodaCond = null;
+//				sodaNull = true;
+//			} else {
+//				sodaCond = soda;
+//				sodaNull = false;
+//			}
+//			if (price == null || price.equals("")) {
+//				priceCond = null;
+//				priceNull = true;
+//			} else {
+//				priceCond = Double.parseDouble(price);
+//				priceNull = false;
+//			}
+//			if (useGreaterThanEqual) {
+//				priceFilter = true;
+//			}
+//			preparedQuery = buildParameterizedSqlStatementString(restCond, sodaCond, priceCond, priceFilter);
+//			PreparedStatement stmt = this.dbService.getConnection().prepareStatement(preparedQuery);
+//			if (!restNull && !sodaNull && !priceNull) {
+//				stmt.setString(1, restCond);
+//				stmt.setString(2, sodaCond);
+//				stmt.setDouble(3, priceCond);
+//			}
+//			if (!restNull && !sodaNull && priceNull) {
+//				stmt.setString(1, restCond);
+//				stmt.setString(2, sodaCond);
+//			}
+//			if (!restNull && sodaNull && !priceNull) {
+//				stmt.setString(1, restCond);
+//				stmt.setDouble(2, priceCond);
+//			}
+//			if (restNull && !sodaNull && !priceNull) {
+//				stmt.setString(1, sodaCond);
+//				stmt.setDouble(2, priceCond);
+//			}
+//			if (!restNull && sodaNull && priceNull) {
+//				stmt.setString(1, restCond);
+//			}
+//			if (restNull && !sodaNull && priceNull) {
+//				stmt.setString(1, sodaCond);
+//			}
+//			if (restNull && sodaNull && !priceNull) {
+//				stmt.setDouble(1, priceCond);
+//			}
+			return parseResults(results);
+		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(null, "Failed to retrieve sodas by restaurant.");
+			ex.printStackTrace();
+			return new ArrayList<SodaByRestaurant>();
+		}
+
+	}
+
+	/**
+	 * Creates a string containing ? in the correct places in the SQL statement
+	 * based on the filter information provided.
+	 * 
+	 * @param rest                - The restaurant to match
+	 * @param soda                - The soda to match
+	 * @param price               - The price to compare to
+	 * @param useGreaterThanEqual - If true, the prices returned should be greater
+	 *                            than or equal to what's given, otherwise less than
+	 *                            or equal.
+	 * @return A string representing the SQL statement to be executed
+	 */
+	private String buildParameterizedSqlStatementString(String rest, String soda, Double price,
+			boolean useGreaterThanEqual) {
+		String sqlStatement = "SELECT Restaurant, Soda, Manufacturer, RestaurantContact, Price \nFROM SodasByRestaurant\n";
+		ArrayList<String> wheresToAdd = new ArrayList<String>();
+
+		if (rest != null) {
+			wheresToAdd.add("Restaurant = ?");
+		}
+		if (soda != null) {
+			wheresToAdd.add("Soda = ?");
+		}
+		if (price != null) {
+			if (useGreaterThanEqual) {
+				wheresToAdd.add("Price >= ?");
+			} else {
+				wheresToAdd.add("Price <= ?");
+			}
+		}
+		boolean isFirst = true;
+		while (wheresToAdd.size() > 0) {
+			if (isFirst) {
+				sqlStatement = sqlStatement + " WHERE " + wheresToAdd.remove(0);
+				isFirst = false;
+			} else {
+				sqlStatement = sqlStatement + " AND " + wheresToAdd.remove(0);
+			}
+		}
+		return sqlStatement;
+	}
+
+	private ArrayList<SodaByRestaurant> parseResults(ResultSet rs) {
+		try {
+			ArrayList<SodaByRestaurant> sodasByRestaurants = new ArrayList<SodaByRestaurant>();
+			int restNameIndex = rs.findColumn("Restaurant");
+			int sodaNameIndex = rs.findColumn("Soda");
+			int manfIndex = rs.findColumn("Manufacturer");
+			int restContactIndex = rs.findColumn("RestaurantContact");
+			int priceIndex = rs.findColumn("Price");
+			while (rs.next()) {
+				sodasByRestaurants.add(new SodaByRestaurant(rs.getString(restNameIndex), rs.getString(sodaNameIndex),
+						rs.getString(manfIndex), rs.getString(restContactIndex), rs.getDouble(priceIndex)));
+			}
+			System.out.println(sodasByRestaurants.size());
+			return sodasByRestaurants;
+		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(null,
+					"An error ocurred while retrieving sodas by restaurants. See printed stack trace.");
+			ex.printStackTrace();
+			return new ArrayList<SodaByRestaurant>();
+		}
+
+	}
+
+}

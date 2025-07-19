@@ -1,0 +1,4 @@
+serverUsername=SodaBaseUser<yourusername>
+serverPassword=Password123
+databaseName=SodaBase<yourusername>
+serverName=titan.csse.rose-hulman.edu

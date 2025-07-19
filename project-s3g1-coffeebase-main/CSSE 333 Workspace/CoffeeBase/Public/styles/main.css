@@ -1,0 +1,142 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+    background-image: url("background/CoffeeBase.jpg");
+    background-size: cover; /* This will make the background image cover the entire container */
+    /* dimensions (e.g., 100%, 200px, etc.) */
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+}
+ 
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20px;
+}
+/* #UIbox {
+    position: fixed;
+} */
+#inputFields, #updateFields, #deleteFields, #inputConditions, #importByFile{
+    display: inline-block !important;
+    border-color: black !important;
+    border: 2px solid !important;
+} 
+#updateOptions, #deleteOptions, #tableOptions, #searchOptions{
+    margin-bottom: 15px;
+}
+#comments, #warnings, #instructions{
+    margin-bottom: 10px;
+}
+#comments a, #warnings a{
+    font-size: 1.1rem;
+    color: rgb(250, 1, 1);
+}
+.form-select{
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+ 
+label {
+    /*display: inline-block !important;*/
+    flex-direction: row;
+    /* margin-bottom: 5px;
+    margin-right: 10px; */
+    margin: 0px !important;
+    font-weight: bold;
+}
+#importByFile label{
+    margin-bottom: 10px !important;
+    font-size: large;
+}
+input {
+    box-sizing: border-box !important;
+    width: 30rem !important;
+}
+ 
+/* #inputFields label, #inputFields input, #inputConditions label, #inputConditions input ,#updateFields label, #updateFields input, #deleteFields label, #deleteFields input{
+    margin-right: 10px;
+} */
+#searchButton ,#importButton{
+    width: 15rem;
+    margin-top: 20px !important;
+    margin-bottom :20px !important;
+    font-weight: bold;
+}
+#showButton{
+    width: 15rem;
+    margin-bottom :20px !important;
+    font-weight: bold;
+}
+#importFileButton{
+    background-color: black;
+}
+#navBar{
+    background-color: #472b01 !important;
+}
+#navBar a{
+    font-weight: bold;
+    color:aliceblue
+}
+#navTab a{
+    background-color: rgb(153, 126, 96);
+    border-radius: 10px;
+    border-color: black;
+    border-width: 10px;
+    font-weight: bold;
+    color:rgb(243, 240, 237);
+    text-align: center;
+    margin-right:10px;
+}
+#navTab a:nth-child(5){
+    color:rgb(36, 20, 4) !important;
+}
+ 
+.page-container {
+    text-align: center;
+}
+ 
+.form-select, .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+ 
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+ 
+button:hover {
+    background-color: #0056b3;
+}
+ 
+#logoutButton {
+    margin-right: 20px;
+}
+ 
+/* input[type="file"] {
+    display: none;
+} */
+ 
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+ 
+.btn-primary:hover {
+    background-color: #0056b3;
+}

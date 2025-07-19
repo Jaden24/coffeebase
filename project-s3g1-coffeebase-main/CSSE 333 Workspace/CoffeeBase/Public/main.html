@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel = "stylesheet" href = "styles/main.css">
+</head>
+<nav id = "navBar" class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">COFFEE BASE</a>
+    <button
+      data-mdb-collapse-init
+      class="navbar-toggler"
+      type="button"
+      data-mdb-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div id ="navTab" class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="/main.html">Add</a>
+        <a class="nav-link" aria-current="page" href="/update.html">Update</a>
+        <a class="nav-link" aria-current="page" href="/delete.html">Delete</a>
+        <a class="nav-link" aria-current="page" href="/SELECT.html">SEARCH</a>
+        <!-- <a class="nav-link disabled"
+          >Disabled</a> -->
+      </div>
+    </div>
+  </div>
+  <button id ="logoutButton" type="Button" class="btn btn-primary" data-mdb-ripple-init>Logout</button>
+</nav>
+<body id = "client">
+  <section>
+  <div id = "mainPage" class = "container page-container">
+    <!-- Your HTML content here -->
+    <div>
+      <!-- <select id = "operation" class="form-select" aria-label="Default select example">
+        <option selected>Select Operation</option>
+        <option value="1">Insert</option>
+        <option value="2">Update</option>
+        <option value="3">Delete</option>
+      </select> -->
+    <div>
+    <select id= "tableOptions" class="form-select" aria-label="Default select example" onchange = "switchMainPageHTML()">
+      <option selected>Choose Category to Add</option><label for="tableOptions" class="form-label">TableName</label>
+      <option value="Business">Add Business</option>
+      <option value="Roastery">Add Roastery</option>
+      <option value="Restaurant">Add Restaurant</option>
+      <option value="Farm">Add Farm</option>
+      <option value="Customer">Add Customer</option>
+      <option value="Beans">Add Beans</option>
+      <option value="Blend">Add Blend</option>
+      <option value="BlendMadeBy">Who Made the Blend</option>
+      <option value="BlendSoldToCust">Who Bought the Blend (Customer)</option>
+      <option value="BlendSoldToRest">Who Bought the Blend (Restaurant)</option>
+      <option value="Drink">Add Drink</option>
+    </select>
+    </div>
+    <div id = "inputFields" class="form-outline" data-mdb-input-init>
+   
+    </div>
+    
+    <div>
+      <button id = "importButton" onclick="importData()">Import Single Data</button>
+    </div>
+    <label for= "showButton" class="form-label">Click Below To See Data<br></label>
+    <div>
+      <button onclick = "showData()" id ="showButton" type="Button" class="btn btn-primary" data-mdb-ripple-init>Show Current Full Data</button>
+      </div>
+    <table id = "selectedInputFields" class="table table-striped">
+
+    </table>
+
+    <div id= "importByFile">
+      <label for="ImportedData" class="form-label">OR <br>Upload a CSV file</label>
+      <input class="form-control form-control-lg" id="ImportedData" type="file">
+      <button id ="importFileButton" onclick="importFile()">Upload File</button>
+      <!-- <label class="form-label" for="ImportedData">Default file input example</label>
+      <input type="file" class="form-control" id="customFile" /> -->
+    </div>
+  </div>
+</section>
+</body>
+<script src ="scripts/main.js"></script>
+<script src="scripts/client.js"></script>
+</html>

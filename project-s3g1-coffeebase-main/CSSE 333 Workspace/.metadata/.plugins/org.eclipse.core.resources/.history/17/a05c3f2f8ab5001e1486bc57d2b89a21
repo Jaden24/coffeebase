@@ -1,0 +1,92 @@
+package sodabase.services;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+public class SodaService {
+
+	private DatabaseConnectionService dbService = null;
+	
+	public SodaService(DatabaseConnectionService dbService) {
+		this.dbService = dbService;
+	}
+
+	public boolean addSoda(String sodaName, String manf) {
+		
+		Connection connection = null;
+		try{
+			connection = this.dbService.getConnection();
+			//call stored procedure
+			
+			CallableStatement stmt = connection.prepareCall("{? = call AddSoda(?, ?)}");
+			stmt.registerOutParameter(1, Types.INTEGER);
+			stmt.setString(2, sodaName);
+			stmt.setString(3, manf);
+			boolean results = stmt.execute();
+			//read the results
+//			while (results.next()) {
+//				String res = results.getString("name");
+//				String address = results.getString("addr");
+//				String contactinfo = results.getString("contact");
+//				System.out.println("Restaurant: " + res + "Address: " + address + "Contact: " + contactinfo);
+//			}
+			//check return code
+			int returnCode = stmt.getInt(1);
+			if(returnCode == 1){
+				JOptionPane.showMessageDialog(null, "Soda name cannot be null or empty.");
+				return results;
+			}
+			else if(returnCode == 2) {
+				JOptionPane.showMessageDialog(null, "Soda name already exists.");
+				return results;
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Successfully inserted " + sodaName + ", " + manf);
+				return results;
+			}
+			//close connection
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			//close connection
+			try {
+				if(connection != null && !connection.isClosed())
+				connection.close();
+			}catch (SQLException e) {
+				
+			}
+		}
+				
+	}
+	
+	public ArrayList<String> getSodas() {
+		//TODO: Task 2
+		ArrayList<String> sodas = new ArrayList<String>();
+		
+		try {
+			Connection connection = this.dbService.getConnection();
+			String query = "select name, manf from Soda";
+			Statement statement = connection.createStatement();
+			ResultSet results = statement.executeQuery(query);
+			//read the results
+			while (results.next()) {
+				String sodaName = results.getString("name");
+				sodas.add(sodaName);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return sodas;
+	}
+}
