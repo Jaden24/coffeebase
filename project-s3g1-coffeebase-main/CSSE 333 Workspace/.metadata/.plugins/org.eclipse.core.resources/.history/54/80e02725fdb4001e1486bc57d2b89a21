@@ -1,0 +1,85 @@
+package sodabase.services;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+public class RestaurantService {
+
+	private DatabaseConnectionService dbService = null;
+	
+	public RestaurantService(DatabaseConnectionService dbService) {
+		this.dbService = dbService;
+	}
+	
+	public boolean addResturant(String restName, String addr, String contact) {
+		//TODO: Task 5
+		JOptionPane.showMessageDialog(null, "Add Restaurant not implemented.");
+		return false;
+		Connection connection = null;
+		try{
+			connection = this.dbService.getConnection();
+			//call stored procedure
+			
+			CallableStatement stmt = connection.prepareCall("{?=call OrderHistorySummary(?)}");
+			stmt.registerOutParameter(1, Types.INTEGER);
+			stmt.setString(2, "gray17");
+			ResultSet results = stmt.executeQuery();
+			//read the results
+			while (results.next()) {
+				int orderID = results.getInt("OrderID");
+				Date placed = results.getDate("Placed");
+				float totalPrice = results.getFloat("TotalPrice");
+				System.out.println("OrderID: " + orderID + "Placed " + placed + "TotalPrice " + totalPrice);
+			}
+			//check return code
+			
+			int returnCode = stmt.getInt(1);
+			if(returnCode == 0) {
+				System.out.println("Sucess!");
+			}else {
+				System.out.println("Error");
+			}
+			//close connection
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//close connection
+			try {
+				if(connection != null && !connection.isClosed())
+				connection.close();
+			}catch (SQLException e) {
+				
+			}
+		}
+	}
+	
+
+	public ArrayList<String> getRestaurants() {	
+		//TODO: Task 2 
+		ArrayList<String> rests = new ArrayList<String>();
+		try {
+			Connection connection = this.dbService.getConnection();
+			String query = "select name, addr, contact from Rest";
+			Statement statement = connection.createStatement();
+			ResultSet results = statement.executeQuery(query);
+			//read the results
+			while (results.next()) {
+				String RestName = results.getString("name");
+				rests.add(RestName);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rests;
+	}
+}

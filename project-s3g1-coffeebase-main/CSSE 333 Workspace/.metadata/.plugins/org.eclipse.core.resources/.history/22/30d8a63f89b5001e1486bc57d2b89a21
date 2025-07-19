@@ -1,0 +1,47 @@
+package sodabase.services;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+public class SodaService {
+
+	private DatabaseConnectionService dbService = null;
+	
+	public SodaService(DatabaseConnectionService dbService) {
+		this.dbService = dbService;
+	}
+
+	public boolean addSoda(String sodaName, String manf) {
+		JOptionPane.showMessageDialog(null, "Add Soda not implemented.");
+		return false;
+	}
+	
+	public ArrayList<String> getSodas() {
+		//TODO: Task 2
+		ArrayList<String> sodas = new ArrayList<String>();
+		
+		try {
+			Connection connection = this.dbService.getConnection();
+			String query = "select name, manf from Soda";
+			Statement statement = connection.createStatement();
+			ResultSet results = statement.executeQuery(query);
+			//read the results
+			while (results.next()) {
+				String sodaName = results.getString("name");
+				sodas.add(sodaName);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return sodas;
+	}
+}
